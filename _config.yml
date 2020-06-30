@@ -1,2 +1,5 @@
 theme: jekyll-theme-slate
 title: Taiiwo's Github Site
+
+plugins:
+    - jekyll-admin
