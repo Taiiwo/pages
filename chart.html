@@ -63,6 +63,8 @@
         var target2 = parseFloat(url.get("target2"));
         var target3 = parseFloat(url.get("target3"));
         var target4 = parseFloat(url.get("target4"));
+        var interval = url.get("interval") || "15m";
+
 
         chart.createGraphicMark("verticalStraightLine", {id: "buy_time", points: [{
             timestamp: entryts, price: entryprice
@@ -97,7 +99,7 @@
         
         bn.call("GET", "/api/v3/klines", {
             symbol: coin+"BTC",
-            interval:"15m"
+            interval:interval
         }, function(ohlc) {
             var dl = ohlc.map(function(data) {
                 return {
