@@ -39,10 +39,21 @@
         }
 
         var bn = new Binance();
-        var chart = klinecharts.init("chart");
+        var chart = klinecharts.init("chart", {
+            xAxis: {
+                show: true,
+                height: null,
+                axisLine: {
+                    show: true,
+                    color: '#888888',
+                    size: 1
+                }
+            }
+        });
         chart.createTechnicalIndicator("MA", false, {id:"candle_pane"});
         chart.createTechnicalIndicator("VOL");
         chart.createTechnicalIndicator("MACD");
+        chart.setPriceVolumePrecision(8, 8)
         
         var url = new URL(document.location.href).searchParams;
         var coin = url.get("coin");
