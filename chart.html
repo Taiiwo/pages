@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Taiiwo's Signal Mapper</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Your name">
+    <meta name="description" content="Brief description">
+    <meta property="og:title" content="Taiiwo's Signal Mapper">
+    <meta property="og:description" content="Brief description">
+    <meta property="og:image" content="/some-image.png">
+    <meta property="og:url" content="/this-page.html">
+    <meta property="og:site_name" content="Your Site Name">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image:alt" content="image description">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <style>
+        body {
+            background-color: black;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart" style="height: 98vh"></div>
+    <script src="https://cdn.jsdelivr.net/npm/klinecharts/dist/klinecharts.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script>
+        function Binance() {
+            this.baseurl = "https://api.binance.com";
+
+            this.call = function(method, endpoint, data, callback) {
+                $.ajax({
+                    method: method,
+                    url: this.baseurl + endpoint,
+                    data: data,
+                    success: callback
+                });
+            }
+        }
+
+        var bn = new Binance();
+        var chart = klinecharts.init("chart");
+        chart.createTechnicalIndicator("MA", false, {id:"candle_pane"});
+        chart.createTechnicalIndicator("VOL");
+        chart.createTechnicalIndicator("MACD");
+        
+        var url = new URL(document.location.href).searchParams;
+        var coin = url.get("coin");
+        var entryts = parseInt(url.get("entryts"));
+        var entryprice = parseFloat(url.get("entryprice"));
+        var target1 = parseFloat(url.get("target1"));
+        var target2 = parseFloat(url.get("target2"));
+        var target3 = parseFloat(url.get("target3"));
+        var target4 = parseFloat(url.get("target4"));
+
+        chart.createGraphicMark("verticalStraightLine", {id: "buy_time", points: [{
+            timestamp: entryts, price: entryprice
+        }]});
+        chart.createGraphicMark("horizontalStraightLine", {id: "buy_price", points: [{
+            timestamp: entryts, price: entryprice
+        }]});
+        chart.createGraphicMark("horizontalStraightLine", {id: "target1", points: [{
+            timestamp: entryts, price: target1
+        }], styles:{
+            line: {color: "green", size: 2}
+        }});
+        chart.createGraphicMark("horizontalStraightLine", {id: "target2", points: [{
+            timestamp: entryts, price: target2
+        }], styles:{
+            line: {color: "green", size: 2}
+        }});
+        chart.createGraphicMark("horizontalStraightLine", {id: "target3", points: [{
+            timestamp: entryts, price: target3
+        }], styles:{
+            line: {color: "green", size: 2}
+        }});
+        chart.createGraphicMark("horizontalStraightLine", {id: "target4", points: [{
+            timestamp: entryts, price: target4
+        }], styles:{
+            line: {color: "green", size: 2}
+        }});
+        
+        bn.call("GET", "/api/v3/klines", {
+            symbol: coin+"BTC",
+            interval:"15m"
+        }, function(ohlc) {
+            var dl = ohlc.map(function(data) {
+                return {
+                    timestamp: new Date(data[0]).getTime(),
+                    open: +data[1],
+                    high: +data[2],
+                    low: +data[3],
+                    close: +data[4],
+                    volume: Math.ceil(+data[5]),
+                }
+            });
+            chart.applyNewData(dl);
+        });
+    </script>
+</body>
+</html>
