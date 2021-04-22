@@ -73,26 +73,26 @@
             timestamp: entryts, price: entryprice
         }]});
         chart.createGraphicMark("horizontalRayLine", {id: "target1", points: [
-            {timestamp: entryts, price: target1},
-            {timestamp: entryts+1000000, price: target1}
+            {timestamp: entryts-1000*60, price: target1},
+            {timestamp: entryts, price: target1}
         ], styles:{
             line: {color: "green", size: 2}
         }});
         chart.createGraphicMark("horizontalRayLine", {id: "target2", points: [
-            {timestamp: entryts, price: target2},
-            {timestamp:entryts*2, price: target2}
+            {timestamp: entryts-1000*60, price: target2},
+            {timestamp:entryts, price: target2}
         ], styles:{
             line: {color: "green", size: 2}
         }});
         chart.createGraphicMark("horizontalRayLine", {id: "target3", points: [
-            {timestamp: entryts, price: target3},
-            {timestamp:entryts*2, price: target3}
+            {timestamp: entryts-1000*60, price: target3},
+            {timestamp:entryts, price: target3}
         ], styles:{
             line: {color: "green", size: 2}
         }});
         chart.createGraphicMark("horizontalRayLine", {id: "target4", points: [
-            {timestamp: entryts, price: target4},
-            {timestamp:entryts*2, price: target4}
+            {timestamp: entryts-1000*60, price: target4},
+            {timestamp:entryts, price: target4}
         ], styles:{
             line: {color: "green", size: 2}
         }});
