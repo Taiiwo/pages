@@ -72,36 +72,61 @@
         chart.createTechnicalIndicator("MACD");
         chart.setPriceVolumePrecision(8, 8)
 
+        chart.addCustomGraphicMark({
+            name: 'target_line',
+            totalStep: 2,
+            checkMousePointOn: (key, type, points, mousePoint) => {
+                return false
+            },
+            createGraphicDataSource: (step, tpPoints, xyPoints, viewport, precision, xAxis, yAxis) => {
+                return [
+                {
+                    type: 'line',
+                    isDraw: true,
+                    isCheck: true,
+                    dataSource: [[xyPoints[0], { x: viewport.width, y: xyPoints[0].y }]]
+                },
+                {
+                    type: 'text',
+                    isDraw: true,
+                    isCheck: false,
+                    dataSource: [{
+                        x: xyPoints[0].x,
+                        y: xyPoints[0].y,
+                        text: yAxis.convertFromPixel(xyPoints[0].y).toFixed(precision.price) + " (" + (((yAxis.convertFromPixel(xyPoints[0].y)/entryprice)-1)*100).toFixed(3) + "%)",
+
+                    }]
+                }
+                ]
+            }
+        })
+
 
         chart.createGraphicMark("verticalStraightLine", {id: "buy_time", points: [{
             timestamp: entryts, price: entryprice
         }]});
-        chart.createGraphicMark("horizontalStraightLine", {id: "buy_price", points: [{
+        chart.createGraphicMark("priceLine", {id: "buy_price", points: [{
             timestamp: entryts, price: entryprice
         }]});
-        chart.createGraphicMark("horizontalRayLine", {id: "target1", points: [
+        chart.createGraphicMark("target_line", {id: "target1", points: [
             {timestamp: entryts, price: target1},
-            {timestamp: entryts+1000*60*15, price: target1}
         ], styles:{
-            line: {color: "green", size: 2}
+            line: {color: "green", size: 1}
         }});
-        chart.createGraphicMark("horizontalRayLine", {id: "target2", points: [
+        chart.createGraphicMark("target_line", {id: "target2", points: [
             {timestamp: entryts, price: target2},
-            {timestamp:entryts+1000*60*15, price: target2}
         ], styles:{
-            line: {color: "green", size: 2}
+            line: {color: "green", size: 1}
         }});
-        chart.createGraphicMark("horizontalRayLine", {id: "target3", points: [
+        chart.createGraphicMark("target_line", {id: "target3", points: [
             {timestamp: entryts, price: target3},
-            {timestamp:entryts+1000*60*15, price: target3}
         ], styles:{
-            line: {color: "green", size: 2}
+            line: {color: "green", size: 1}
         }});
-        chart.createGraphicMark("horizontalRayLine", {id: "target4", points: [
+        chart.createGraphicMark("target_line", {id: "target4", points: [
             {timestamp: entryts, price: target4},
-            {timestamp:entryts+1000*60*15, price: target4}
         ], styles:{
-            line: {color: "green", size: 2}
+            line: {color: "green", size: 1}
         }});
         
         bn.call("GET", "/api/v3/klines", {
